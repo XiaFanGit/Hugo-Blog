@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='与 WSL 1 相比，WSL 2 做了架构的巨大变更，使用了虚拟化技术。从现在开始，WSL 2 拥有了完整的 Linux 内核，支持 Docker，GPU 等 WSL 1 时代无法实现的功能，并能够与 Visual Studio Code 集成。'><title>关于 WSL 2 使用的经验谈</title>
+
+<link rel='canonical' href='https://motofans.club/p/subsystem-wsl-2/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='关于 WSL 2 使用的经验谈'>
+<meta property='og:description' content='与 WSL 1 相比，WSL 2 做了架构的巨大变更，使用了虚拟化技术。从现在开始，WSL 2 拥有了完整的 Linux 内核，支持 Docker，GPU 等 WSL 1 时代无法实现的功能，并能够与 Visual Studio Code 集成。'>
+<meta property='og:url' content='https://motofans.club/p/subsystem-wsl-2/'>
+<meta property='og:site_name' content='风满楼'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-09-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-09-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://motofans.club/p/subsystem-wsl-2/wsl2.png' />
+<meta name="twitter:title" content="关于 WSL 2 使用的经验谈">
+<meta name="twitter:description" content="与 WSL 1 相比，WSL 2 做了架构的巨大变更，使用了虚拟化技术。从现在开始，WSL 2 拥有了完整的 Linux 内核，支持 Docker，GPU 等 WSL 1 时代无法实现的功能，并能够与 Visual Studio Code 集成。"><meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content='https://motofans.club/p/subsystem-wsl-2/wsl2.png' />
+    </head>
+    <body class="">
+        <div class="container flex on-phone--column align-items--flex-start extended article-page with-toolbar">
+            <aside class="sidebar left-sidebar sticky">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header class="site-info">
+        
+            <figure class="site-avatar">
+                
+
+                
+                    
+                    <img src="/img/avatar_hu550536b03a0c665cd07bca66e7261199_253848_300x300_resize_box_2.png" width="300"
+                        height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+        
+        <h1 class="site-name"><a href="https://motofans.club">风满楼</a></h1>
+        <h2 class="site-description">不怎么样的经验谈</h2>
+    </header>
+
+    <ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/about'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+    </ol>
+</aside>
+
+            <main class="main full-width">
+    <div id="article-toolbar">
+        <a href="https://motofans.club" class="back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+            <span>Back</span>
+        </a>
+    </div>
+
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <img srcset="/p/subsystem-wsl-2/wsl2_hu36d77f064bb603dced9d1ed4fcecdfea_40675_1024x0_resize_box_2.png 1024w, /p/subsystem-wsl-2/wsl2_hu36d77f064bb603dced9d1ed4fcecdfea_40675_2000x0_resize_box_2.png 2000w"
+                    src="/p/subsystem-wsl-2/wsl2_hu36d77f064bb603dced9d1ed4fcecdfea_40675_2000x0_resize_box_2.png" width="980" height="551" loading="lazy"
+                    alt="Featured image of post 关于 WSL 2 使用的经验谈" />
+            
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/wsl/" 
+                    class="color-tag"
+                    data-image="/p/subsystem-wsl-2/wsl2_hu36d77f064bb603dced9d1ed4fcecdfea_40675_20x20_fill_box_smart1_2.png" 
+                    data-key="subsystem-wsl-2" 
+                    data-hash="md5-gpFEJHvV5CdmE2LXBF//DQ==">
+                    WSL
+                </a>
+            
+        
+            <a href="/categories/windows/" 
+                    class="color-tag"
+                    data-image="/p/subsystem-wsl-2/wsl2_hu36d77f064bb603dced9d1ed4fcecdfea_40675_20x20_fill_box_smart1_2.png" 
+                    data-key="subsystem-wsl-2" 
+                    data-hash="md5-gpFEJHvV5CdmE2LXBF//DQ==">
+                    Windows
+                </a>
+            
+        
+            <a href="/categories/linux/" 
+                    class="color-tag"
+                    data-image="/p/subsystem-wsl-2/wsl2_hu36d77f064bb603dced9d1ed4fcecdfea_40675_20x20_fill_box_smart1_2.png" 
+                    data-key="subsystem-wsl-2" 
+                    data-hash="md5-gpFEJHvV5CdmE2LXBF//DQ==">
+                    Linux
+                </a>
+            
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/subsystem-wsl-2/">关于 WSL 2 使用的经验谈</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        与 WSL 1 相比，WSL 2 做了架构的巨大变更，使用了虚拟化技术。从现在开始，WSL 2 拥有了完整的 Linux 内核，支持 Docker，GPU 等 WSL 1 时代无法实现的功能，并能够与 Visual Studio Code 集成。
+    </h3>
+    <footer class="article-time">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <time class="article-time--published">Sep 09, 2020</time>
+    </footer></div>
+</header>
+
+    <section class="article-content">
+    <h3 id="先决条件">先决条件</h3>
+<ul>
+<li>Version 1903 or higher, with Build 18362 or higher.</li>
+</ul>
+<h3 id="开启虚拟化支持">开启虚拟化支持</h3>
+<p>在 Windows Features 中勾选 Virtual Machine Platform (虚拟机平台) 和 Windows Subsystem for Linux (适用于 Linux 的 Windows 子系统)</p>
+<p>或者以管理员身份打开 PowerShell 并运行</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+</code></pre></div><h3 id="安装-linux-内核更新程序">安装 Linux 内核更新程序</h3>
+<p><a class="link" href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"  target="_blank" rel="noopener"
+    >WSL2 Linux kernel update package for x64 machines</a></p>
+<h3 id="设置-wsl-2-作为默认的版本">设置 WSL 2 作为默认的版本</h3>
+<p>以管理员身份打开 PowerShell 并运行</p>
+<div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">wsl</span> <span class="p">-</span><span class="n">-set-default-version</span> <span class="n">2</span>
+</code></pre></div><h3 id="安装-centwsl">安装 CentWSL</h3>
+<p>Windows Store 中并没有提供 CentOS 7/8 的发行版，如果你想使用 CentOS 可以使用开源的 CentWSL。</p>
+<p><a href="https://github.com/wsldl-pg/CentWSL">https://github.com/wsldl-pg/CentWSL</a></p>
+<ol>
+<li>下载 Release 中的 Zip 安装包</li>
+<li>解压 Zip 包到你想安装 WSL 的位置</li>
+<li>运行 CentOS.exe 以初始化 rootfs 并且注册到 WSL</li>
+<li>你可以为 CentOS.exe 创建一个快捷方式</li>
+</ol>
+<h3 id="查看-wsl-的运行状态">查看 WSL 的运行状态</h3>
+<div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">wsl</span> <span class="n">-l</span> <span class="n">-v</span>
+</code></pre></div><h3 id="从-cmdpowershell-进入到-wsl">从 CMD/Powershell 进入到 WSL</h3>
+<div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">bash</span>
+</code></pre></div><h3 id="为-vscode-启用-wsl">为 VSCode 启用 WSL</h3>
+<p>在 VSCode 中安装 <a class="link" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl"  target="_blank" rel="noopener"
+    >Remote - WSL</a></p>
+<p>你可以从屏幕左下角的 &gt;&lt; 切换到 WSL:CentOS7</p>
+<h3 id="替换-systemctl">替换 Systemctl</h3>
+<p>默认的 Systemctl 有一些问题，在 WSL 中执行以下命令进行替换</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">mv /usr/bin/systemctl /usr/bin/systemctl.old
+curl https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl.py &gt; /usr/bin/systemctl
+chmod +x /usr/bin/systemctl
+</code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">&copy; 2020 风满楼</section>
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="1.1.0">Stack</a></b> designed by
+        <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true" style="display:none">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"
+    integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin="anonymous"></script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<link rel="stylesheet" href="/css/highlight/light.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="/css/highlight/dark.min.css" media="(prefers-color-scheme: dark)">
+
+    </body>
+</html>

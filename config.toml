@@ -101,3 +101,4 @@ DefaultContentLanguage = "zh-cn" # Theme i18n support
 [markup]
     [markup.highlight]
         noClasses = false
+
