@@ -1,4 +1,4 @@
-baseurl = "https://motofans.club"
+baseurl = "https://blog.motofans.club"
 languageCode = "en-us"
 theme = "hugo-theme-stack"
 paginate = 5

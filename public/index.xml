@@ -1,56 +1,52 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>风满楼</title>
-        <link>https://motofans.club/</link>
-        <description>Recent content on 风满楼</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>en-us</language>
-        <lastBuildDate>Wed, 09 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://motofans.club/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>关于 WSL 2 使用的经验谈</title>
-        <link>https://motofans.club/p/subsystem-wsl-2/</link>
-        <pubDate>Wed, 09 Sep 2020 00:00:00 +0000</pubDate>
-        
-        <guid>https://motofans.club/p/subsystem-wsl-2/</guid>
-        <description>&lt;img src="https://motofans.club/p/subsystem-wsl-2/wsl2.png" alt="Featured image of post 关于 WSL 2 使用的经验谈" /&gt;&lt;h3 id=&#34;先决条件&#34;&gt;先决条件&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Version 1903 or higher, with Build 18362 or higher.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;开启虚拟化支持&#34;&gt;开启虚拟化支持&lt;/h3&gt;
-&lt;p&gt;在 Windows Features 中勾选 Virtual Machine Platform (虚拟机平台) 和 Windows Subsystem for Linux (适用于 Linux 的 Windows 子系统)&lt;/p&gt;
-&lt;p&gt;或者以管理员身份打开 PowerShell 并运行&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;安装-linux-内核更新程序&#34;&gt;安装 Linux 内核更新程序&lt;/h3&gt;
-&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;WSL2 Linux kernel update package for x64 machines&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&#34;设置-wsl-2-作为默认的版本&#34;&gt;设置 WSL 2 作为默认的版本&lt;/h3&gt;
-&lt;p&gt;以管理员身份打开 PowerShell 并运行&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;n&#34;&gt;wsl&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;-set-default-version&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;2&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;安装-centwsl&#34;&gt;安装 CentWSL&lt;/h3&gt;
-&lt;p&gt;Windows Store 中并没有提供 CentOS 7/8 的发行版，如果你想使用 CentOS 可以使用开源的 CentWSL。&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/wsldl-pg/CentWSL&#34;&gt;https://github.com/wsldl-pg/CentWSL&lt;/a&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;下载 Release 中的 Zip 安装包&lt;/li&gt;
-&lt;li&gt;解压 Zip 包到你想安装 WSL 的位置&lt;/li&gt;
-&lt;li&gt;运行 CentOS.exe 以初始化 rootfs 并且注册到 WSL&lt;/li&gt;
-&lt;li&gt;你可以为 CentOS.exe 创建一个快捷方式&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;查看-wsl-的运行状态&#34;&gt;查看 WSL 的运行状态&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;n&#34;&gt;wsl&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-l&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-v&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;从-cmdpowershell-进入到-wsl&#34;&gt;从 CMD/Powershell 进入到 WSL&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;n&#34;&gt;bash&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;为-vscode-启用-wsl&#34;&gt;为 VSCode 启用 WSL&lt;/h3&gt;
-&lt;p&gt;在 VSCode 中安装 &lt;a class=&#34;link&#34; href=&#34;https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;Remote - WSL&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;你可以从屏幕左下角的 &amp;gt;&amp;lt; 切换到 WSL:CentOS7&lt;/p&gt;
-&lt;h3 id=&#34;替换-systemctl&#34;&gt;替换 Systemctl&lt;/h3&gt;
-&lt;p&gt;默认的 Systemctl 有一些问题，在 WSL 中执行以下命令进行替换&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mv /usr/bin/systemctl /usr/bin/systemctl.old
-curl https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl.py &amp;gt; /usr/bin/systemctl
-chmod +x /usr/bin/systemctl
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
-        </item>
-        
-    </channel>
+  <channel>
+    <title>风满楼</title>
+    <link>https://motofans.club/</link>
+    <description>Recent content on 风满楼</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 09 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://motofans.club/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>关于 WSL 2 使用的经验谈</title>
+      <link>https://motofans.club/p/subsystem-wsl-2/</link>
+      <pubDate>Wed, 09 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://motofans.club/p/subsystem-wsl-2/</guid>
+      <description>先决条件  Version 1903 or higher, with Build 18362 or higher.  开启虚拟化支持 在 Windows Features 中勾选 Virtual Machine Platform (虚拟机平台) 和 Windows Subsystem for Linux (适用于 Linux 的 Windows 子系统)
+或者以管理员身份打开 PowerShell 并运行
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart 安装 Linux 内核更新程序 WSL2 Linux kernel update package for x64 machines
+设置 WSL 2 作为默认的版本 以管理员身份打开 PowerShell 并运行
+wsl --set-default-version 2 安装 CentWSL Windows Store 中并没有提供 CentOS 7/8 的发行版，如果你想使用 CentOS 可以使用开源的 CentWSL。</description>
+    </item>
+    
+    <item>
+      <title>Archives</title>
+      <link>https://motofans.club/archives/</link>
+      <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://motofans.club/archives/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://motofans.club/about/</link>
+      <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://motofans.club/about/</guid>
+      <description>Written in Go, Hugo is an open source static site generator available under the Apache Licence 2.0. Hugo supports TOML, YAML and JSON data file types, Markdown and HTML content files and uses shortcodes to add rich content. Other notable features are taxonomies, multilingual mode, image processing, custom output formats, HTML/CSS/JS minification and support for Sass SCSS workflows.
+Hugo is ideal for blogs, corporate websites, creative portfolios, online magazines, single page applications or even a website with thousands of pages.</description>
+    </item>
+    
+    <item>
+      <title>Search</title>
+      <link>https://motofans.club/search/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://motofans.club/search/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
 </rss>
