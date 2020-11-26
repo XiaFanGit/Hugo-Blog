@@ -22,7 +22,7 @@ jobs:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          personal_token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          personal_token: ${{ secrets.PERSONAL_TOKEN }}
           EXTERNAL_REPOSITORY: XiaFanGit/motofans.github.io.git
           PUBLISH_BRANCH: master
           PUBLISH_DIR: ./public
