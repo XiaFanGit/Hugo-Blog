@@ -14,6 +14,24 @@ categories:
 
 * Version 1903 or higher, with Build 18362 or higher.
 
+### 我是 LTSC 怎么办？
+
+根据你的系统下载如下的文件：
+
+64 位：https://raw.githubusercontent.com/XiaFanGit/Hugo-Blog/master/data/file/ltsc-to-pro/x64.cab
+32 位：https://raw.githubusercontent.com/XiaFanGit/Hugo-Blog/master/data/file/ltsc-to-pro/x86.cab
+
+以管理员身份打开 PowerShell 并运行
+
+```
+# 64位
+dism /NoRestart /online /add-package /packagepath:D:\x64.cab
+# 32位
+dism /NoRestart /online /add-package /packagepath:D:\x32.cab
+# 重新激活 win10 专业版的系统
+slmgr /ipk VK7JG-NPHTM-C97JM-9MPGT-3V66T
+```
+
 ### 开启虚拟化支持
 
 在 Windows Features 中勾选 Virtual Machine Platform (虚拟机平台) 和 Windows Subsystem for Linux (适用于 Linux 的 Windows 子系统)
