@@ -24,11 +24,11 @@ categories:
 以管理员身份打开 PowerShell 并运行
 
 ```
-# 64位
+# 64 位执行:
 dism /NoRestart /online /add-package /packagepath:D:\x64.cab
-# 32位
+# 32 位执行:
 dism /NoRestart /online /add-package /packagepath:D:\x32.cab
-# 重新激活 win10 专业版的系统
+# 安装 win10 专业版的产品密钥:
 slmgr /ipk VK7JG-NPHTM-C97JM-9MPGT-3V66T
 ```
 
